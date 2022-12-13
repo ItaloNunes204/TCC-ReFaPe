@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <section class="py-1">
+    <div class="row mt-5">
+        <div class="col-md-3 offset-lg-2">
+            <h3> coletando Fotos do funcionario: {{ cpf }}</h3>
+            <hr>
+            <img src="{{ url_for('fotosCadastroFuncionario') }}" width="100%" class="img-thumbnail">
+        </div>
+    </div>
+</section>
+</body>
+</html>

@@ -1,0 +1,9 @@
+#btn-enviar-loader{
+    display: none;
+}
+#alerta{
+    position:fixed;
+    z-index: 10;
+    top:30px;
+    right: 30px;
+}

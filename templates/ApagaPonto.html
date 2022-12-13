@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt_br">
+<head>
+    <meta charset="UTF-8">
+    <link href="../static/img/refape.png" rel="icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/styleCadastro.css">
+    <title>apagando ponto</title>
+</head>
+<body>
+
+<div class='container'>
+  <div class='card'>
+    <h1> apagando ponto </h1>
+      <form action="deletaP" method="POST">
+          {%for dado in dados%}
+            <div class="saida">
+               <input type="text" id="nome" name="nome" placeholder=" "  value = {{dado[0]}} required>
+               <label id="labelNome" for="nome">Nome</label>
+            </div>
+
+            <div class="saida">
+               <input type="text" id="email" name="cpf" placeholder=" "  value = {{dado[1]}} required>
+               <label id="labelEmail" for="nome">cpf</label>
+            </div>
+
+            <div class="saida">
+               <input type="text" id="id" name="id" placeholder=" "  value={{dado[2]}} required>
+               <label id="labelresponsavel" for="nome">id</label>
+            </div>
+
+            <div class="saida">
+               <input type="text" id="entrada"  name="entrada" placeholder=" "  value={{dado[5]}} required>
+               <label id="labelEntrada" for="nome">entrada</label>
+            </div>
+            <div class="saida">
+               <input type="text" id="saida" name="saida" placeholder=" "  value={{dado[6]}} required>
+               <label id="labelSaida" for="nome">saida</label>
+            </div>
+            <div class="saida">
+               <input type="text" id="permanencia" name="permanencia" placeholder=" "  value={{dado[3]}} required>
+               <label id="labelPermanencia" for="nome">permanencia</label>
+            </div>
+            <div class="saida">
+               <input type="text" id="cnpj" name="cnpj" placeholder=" "  value={{dado[4]}} required>
+               <label id="labelcnpj" for="nome">cnpj</label>
+            </div>
+
+            <div class="justify-center">
+               <input type="checkbox" id="confirmacao" name="confirmacao">
+               <label id="labelConfirmacao" for="confirmacao">confirmação</label>
+            </div>
+
+            <div class='justify-center'>
+               <button type="submit" name="Register" >Apagar Ponto</button>
+            </div>
+          {%endfor%}
+      </form>
+  </div>
+</div>
+
+  <script src="../static/scriptCadastro.js"></script>
+</body>
+</html>

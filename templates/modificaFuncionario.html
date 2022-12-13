@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt_br">
+<head>
+    <meta charset="UTF-8">
+    <link href="../static/img/refape.png" rel="icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/styleCadastro.css">
+    <title>cadasstro de empresa</title>
+</head>
+<body>
+
+<div class='container'>
+  <div class='card'>
+    <h1> Editando Dados do Funcionario</h1>
+      <form action="modificaF" method="POST">
+         {%for dado in dados%}
+
+            <div class="saida">
+               <input type="text" id="nome" name="nome" placeholder=" " value={{dado[0]}} required>
+               <label id="labelNome" for="nome">Nome do Funcionario</label>
+            </div>
+
+            <div class="saida">
+               <input type="text" id="email" name="email" placeholder=" " value={{dado[2]}} required>
+               <label id="labelEmail" for="nome">email</label>
+            </div>
+
+            <div class="saida">
+               <input type="text" readonly id="cpf" name="cpf" placeholder=" " value={{dado[3]}} required>
+               <label id="labelcnpj" for="nome">cpf</label>
+            </div>
+            
+            <div class="justify-center">
+               <input type="checkbox" id="confirmacao" name="confirmacao">
+               <label id="labelConfirmacao" for="confirmacao">confirmação</label>
+            </div>
+
+            <div class='justify-center'>
+               <button type="submit" name="modificar" >modificar</button>
+            </div>
+            
+         {%endfor%}
+      </form>
+  </div>
+</div>
+
+  <script src="../static/scriptCadastro.js"></script>
+</body>
+</html>

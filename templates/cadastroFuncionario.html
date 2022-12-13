@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt_br">
+<head>
+    <meta charset="UTF-8">
+    <link href="../static/img/refape.png" rel="icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/styleCadastro.css">
+    <link href="../static/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="../static/estilosProprios.css" rel="stylesheet">
+    
+    <title>cadastro de empresa</title>
+</head>
+<body>
+   {% with messages = get_flashed_messages() %}
+   {% if messages %}
+         {% for message in messages %}
+            <div id="alerta" class="alert alert-success alert-dismissible fade show" role="alert">
+               <i class="bi bi-check-circle-fill"></i>{{mensage}}
+               <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+         {% endfor %}
+   {% endif %}
+   {% endwith %}
+    <div class='container'>
+      <div class='card'>
+        <h1> Cadastrar Funcionario</h1>
+
+          <form action="/funci" method="POST">
+                <div class="label-float">
+                   <input type="text" id="nome" name="name" placeholder=" " required>
+                   <label id="labelNome" for="nome">Nome do Funcionario</label>
+                </div>
+
+                <div class="label-float">
+                   <input type="text" id="email" name="email" placeholder=" " required>
+                   <label id="labelEmail" for="email">email</label>
+                </div>
+
+                <div class="label-float">
+                   <input type="text" id="cpf" name="cpf" placeholder=" " required>
+                   <label id="labelCpf" for="cpf">cpf</label>
+                </div>
+
+                    <label id="labelImagem" for="labelImagem">fotos</label>
+                   <input type="file" name="fotos" multiple="true" id="imagem" autocomplete="off">
+
+
+                <div class='justify-center'>
+                   <button type="submit" name="Register"> Cadastrar </button>
+                    <a href="/fotosCadastroFuncionario/{{session.get('name')}}"> <button> coletar fotos </button></a>
+                </div>
+          </form>
+      </div>
+    </div>
+    <script src="../static/scriptCadastro.js"></script>
+    <script src="../static/scriptsProprios.js"></script>
+</body>
+</html>

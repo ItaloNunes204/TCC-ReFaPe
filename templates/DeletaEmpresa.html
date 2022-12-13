@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt_br">
+<head>
+    <meta charset="UTF-8">
+    <link href="../static/img/refape.png" rel="icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/styleCadastro.css">
+    <title>cadasstro de empresa</title>
+</head>
+<body>
+
+<div class='container'>
+  <div class='card'>
+    <h1> Deletar Empresa </h1>
+      <form action="deletaEmpresa" method="POST">
+         {%for dado in dados%}
+            <div class="saida">
+               <input type="text" id="nome" placeholder=" "  value={{dado[0]}} required>
+               <label id="labelNome" for="nome">Nome da empresa</label>
+            </div>
+
+            <div class="saida">
+               <input type="text" id="email" placeholder=" "  value={{dado[0]}} required>
+               <label id="labelEmail" for="nome">email</label>
+            </div>
+
+            <div class="saida">
+               <input type="text" id="nomeResponsavel" placeholder=" "  value={{dado[0]}} required>
+               <label id="labelresponsavel" for="nome">Nome do responsavel</label>
+            </div>
+
+            <div class="saida">
+               <input type="text" id="cnpj" placeholder=" "  value={{dado[0]}} required>
+               <label id="labelcnpj" for="nome">cnpj</label>
+            </div>
+
+            <div class="saida">
+               <input type="password" id="senha" placeholder=" " required >
+               <label id="labelSenha" for="senha">Nova Senha</label>
+               <i id="verSenha" class="fa fa-eye" aria-hidden="true"></i>
+
+            </div>
+
+            <div class="saida">
+               <input type="password" id="confirmSenha" placeholder=" " required >
+               <label id="labelConfirmSenha" for="confirmSenha">Confirmar Senha</label>
+               <i id="verConfirmSenha" class="fa fa-eye" aria-hidden="true"></i>
+            </div>
+
+            <div class="justify-center">
+               <input type="checkbox" id="confirmacao">
+               <label id="labelConfirmacao" for="confirmacao">confirmação</label>
+            </div>
+
+            <div class='justify-center'>
+               <button type="submit" name="Register">Deletar</button>
+            </div>
+         {%endfor%}
+
+      </form>
+  </div>
+</div>
+
+  <script src="../static/scriptCadastro.js"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pt_br">
+<head>
+    <meta charset="UTF-8">
+    <link href="../static/img/refape.png" rel="icon">
+    <title>Title</title>
+</head>
+<body>
+<form method="post">
+    <h1>Relatorio de atulizaçoes do sistema</h1>
+    <p>ultima atualização {{recente}}</p>
+    <p>atualizaçoes pendentes {{pendentes}}</p>
+    {%if mostra == False %}
+    <button>iniciar novo treinamento</button>
+    {% endif %}
+    <a href="/">voltar</a>
+</form>
+</body>
+</html>
