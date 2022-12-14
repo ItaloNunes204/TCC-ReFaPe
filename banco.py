@@ -158,6 +158,21 @@ def buscaInf(cnpj):
         saida = "erro na busca"
     return saida
 
+def buscaEmpresa():
+    comando = "select*from refape.empresa order by nome"
+    try:
+        cursor.execute(comando)
+        linhas = cursor.fetchall()
+        if len(linhas) == 0:
+            saida = False
+        else:
+            saida=linhas
+    except Error as e:
+        saida = False
+    return saida
+
+
+
 def buscaLocal(cnpj):
     comando = "select locall from refape.empresa where cnpj= {} order by nome".format(cnpj)
     try:
@@ -182,30 +197,6 @@ def buscaCnpj(cnpj):
             saida = True
     except Error as e:
         saida = "ERRO"
-    return saida
-
-def verificaponto(cpf,nome,cnpj):
-    id=[]
-    comando="select*from refape.ponto where cpf = \'{}\'".format(cpf)
-    try:
-        cursor.execute(comando)
-        linhas = cursor.fetchall()
-        if len(linhas) == 0:
-            pontoEntrada(nome,cpf,cnpj)
-            saida="ponto de entrada realizado"
-        else:
-            for linha in linhas:
-                id.append(linha[2])
-            maior = max(id)
-            tipoDeSaida = verificador(maior)
-            if tipoDeSaida == True:
-                pontoSaida(cpf,id)
-                saida="ponto de saida realizado"
-            else:
-                pontoEntrada(nome,cpf,cnpj)
-                saida="ponto de entrada realizado"
-    except Error as e:
-        saida = "erro ao verificar o ponto"
     return saida
 
 def verificador(id):
@@ -329,31 +320,66 @@ def buscaPontoFuncionarioID(id):
         saida = "erro na busca"
     return saida
 
-def pontoEntrada(nome,cpf,cnpj):
-    comando="INSERT INTO refape.ponto(nome,cpf,Entrada,cnpj) VALUE (\'{}\',\'{}\',NOW(),\'{}\')".format(nome,cpf,cnpj)
+def reconhecimentoPessoa(nome,cnpj):
+    pontos=list()
+    comando = "SELECT*FROM refape.ponto WHERE nome=\'{}\' and cnpj=\'{}\'".format(nome, cnpj)
+    try:
+        cursor.execute(comando)
+        linhas = cursor.fetchall()
+        for linha in linhas:
+            pontos.append(linha[2])
+        saidas = reconhecimentoPessoaId(max(pontos))
+        for saida in saidas:
+            if saida != False:
+                cpf = saida[3]
+                comparador=saida[6]
+                if comparador == "None":
+                    if updatSaida(max(pontos)) == True:
+                        return True
+                    else:
+                        return False
+                else:
+                    if updatEntrada(nome,cpf,cnpj) == True:
+                        return True
+                    else:
+                        return False
+            else:
+                return False
+    except Error as e:
+        return False
+
+def updatSaida(id):
+    comando = " UPDATE refape.ponto set Saida = NOW() where  id=\'{}\'".format(id)
     try:
         cursor.execute(comando)
         con.commit()
-        saida="ponto realizado"
+        saida = True
     except Error as e:
-        saida="erro"
+        saida = False
     return saida
 
-def pontoSaida(cpf,id):
-    comando= "UPDATE refape.ponto set saida = NOW  Where cpf = \'{}\' and id = {}".format(cpf,id)
+def updatEntrada(nome,cpf,cnpj):
+    comando = """ INSERT INTO refape.ponto(nome,cpf,cnpj Entrada)
+               VALUE (\'{}\',\'{}\',\'{}\',NOW())""".format(nome, cpf, cnpj)
     try:
         cursor.execute(comando)
         con.commit()
-        saida = "mudança feita com sucesso"
+        saida = True
     except Error as e:
-        saida = "erro ao fazer as mudanças"
+        saida = False
     return saida
 
-def recebepontoEntrada(nome):
-    return
-def recebepontoSaida(nome):
-    return
-
+def reconhecimentoPessoaId(id):
+    comando = "SELECT*FROM refape.ponto WHERE id=\'{}\'".format(id)
+    try:
+        cursor.execute(comando)
+        linhas = cursor.fetchall()
+        if len(linhas) == 0:
+            return False
+        else:
+            return linhas
+    except Error as e:
+        return False
 
 
 
@@ -469,6 +495,3 @@ def insertLocal(cnpj,local):
     except Error as e:
         saida = "erro ao fazer a mudança"
     return saida
-
-
-

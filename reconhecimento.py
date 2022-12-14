@@ -51,7 +51,7 @@ def criaRede(trainX, trainY,classes,valX,valY,cnpj):
 
     caminhoFinal = os.path.join(os.getcwd(), "inteligen")
     cnpj=str(cnpj)+".h5"
-    cnpj=caminhoFinal+"\\"+cnpj
+    cnpj = os.path.join(caminhoFinal,cnpj)
     modelo = models.Sequential()
     modelo.add(layers.Dense(128, activation="relu", input_shape=(128,)))
     modelo.add(layers.Dense(classes, activation="softmax"))
@@ -80,7 +80,7 @@ def uniDados(cnpj):
                 nome=str(cpf)+".csv"
                 for filename in os.listdir(caminhoFinal):
                     if filename == nome:
-                        nome = caminhoFinal + "\\" + nome
+                        nome = os.path.join(caminhoFinal, nome)
                         face = pd.read_csv(nome)
                         face.drop(columns=['Unnamed: 0'])
                         df_faces = pd.concat(df_faces,face)
@@ -145,7 +145,7 @@ def load_faces(directory_src,numeros,cpf):
         contador = numero
         nome=str(cpf)+str(contador)+".jpeg"
         if filename == nome:
-            path = directory_src + "\\" + filename
+            path = os.path.join(directory_src, filename)
             try:
                 faces.append(load_face(path))
             except:
@@ -194,8 +194,8 @@ def trataFotos(cpf,numeros):
         contador = numero
         nome = str(cpf) + str(contador) + ".jpeg"
         if filename == nome:
-            path = caminhoInicio + "\\" + filename
-            pathFinal=caminhoFinal+"\\"+filename
+            path = os.path.join(caminhoInicio, filename)
+            pathFinal = os.path.join(caminhoFinal, filename)
             try:
                 foto=extrair_rostos(path)
                 foto.save(pathFinal, quality=100, optimize=True, progressive=True)
@@ -224,7 +224,7 @@ def fotos(cpf,numero):
     print(newTrainX)
     df = pd.DataFrame(data=newTrainX)
     df['target'] = trainy
-    nome=caminhoFace+"\\"+nome
+    nome= os.path.join(caminhoFace,nome)
     df.to_csv(nome)
     deletaFace(cpf,numero)
     deletaRosto(cpf,numero)
@@ -237,7 +237,7 @@ def deletaFace(cpf,numeros):
         contador = numero
         nome = str(cpf) + str(contador) + ".jpeg"
         if filename == nome:
-            path = caminhoFinal + "\\" + filename
+            path = os.path.join(caminhoFinal, filename)
             try:
                 os.remove(path)
                 print(filename + " na pasta " + path + " foi deletado ")
@@ -254,7 +254,7 @@ def deletaRosto(cpf,numeros):
         contador = numero
         nome = str(cpf) + str(contador) + ".jpeg"
         if filename == nome:
-            path = caminhoFinal + "\\" + filename
+            path = os.path.join(caminhoFinal, filename)
             try:
                 os.remove(path)
                 print(filename + " na pasta " + path + " foi deletado ")
@@ -269,7 +269,7 @@ def deletaInteligen(cnpj):
     nome=str(cnpj)+".h5"
     for filename in os.listdir(caminhoFinal):
         if filename==nome:
-            path = caminhoFinal + "\\" + filename
+            path = os.path.join(caminhoFinal, filename)
             try:
                 os.remove(path)
                 print(filename + " na pasta " + path + " foi deletado ")

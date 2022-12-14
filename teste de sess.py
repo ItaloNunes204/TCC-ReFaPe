@@ -28,9 +28,23 @@ cameras = cv2.VideoCapture(0)
 model_path = '12345.h5'
 model = rec.load_model(model_path)
 
-pessoas=["italo"]
+modelos=list()
 
-def aplicandoReconhecimento(frame):
+
+def pegandoModelo():
+    dados=bd.buscaEmpresa()
+    for dado in dados:
+        try:
+            nome=str(dado[4]) + ".h5"
+            caminho = os.path.join(os.getcwd(), "inteligen")
+            caminhoFinal = os.path.join(caminho,nome)
+            modelos.append(rec.load_model(caminhoFinal))
+        except:
+            pass
+    return
+
+
+def aplicandoReconhecimento(frame,cnpj,classe):
     tensor,x1, y1, w, h = rec.compara(frame)
     print("retorno efetuado")
     classe = model.predict_classes(tensor)[0]
@@ -48,14 +62,9 @@ def aplicandoReconhecimento(frame):
 
         font = cv2.FONT_HERSHEY_SIMPLEX
         fonte_scale = 0.5
-        nomes=["italo","daniel"]
 
-        if user in nomes:
-            bd.pontoSaida()
-        else:
-            bd.pontoSaida()
-            bd.buscaPontos()
-
+        if user != "desconhecido":
+            bd.reconhecimentoPessoa(user,cnpj)
         frame=cv2.putText(frame, user, (x1, y1 - 10), font, fonte_scale, color, thickness=1)
 
     return frame
@@ -176,7 +185,7 @@ def index():
 @app.route("/envioEmail",methods=["POST","GET"])
 def envioEmail():
     if request.method == "POST":
-        nome = request.form.get("name")
+        nome = request.form.get("nome")
         email = request.form.get("email")
         assunto = request.form.get("assunto")
         mensagem = request.form.get("message")
