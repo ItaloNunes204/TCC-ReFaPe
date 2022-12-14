@@ -26,9 +26,9 @@ Session(app)
 
 cameras = cv2.VideoCapture(0)
 model_path = '12345.h5'
-
+model=rec.load_model(model_path)
 modelos=list()
-
+classe=["italo","daniel"]
 
 def pegandoModelo():
     dados=bd.buscaEmpresa()
@@ -83,7 +83,7 @@ def generate_frames():
             break
         else:
             ret, buffer = cv2.imencode('.jpg', frame)
-            frame=aplicandoReconhecimento(frame)
+            frame=aplicandoReconhecimento(frame,12345,classe,model)
             frame = buffer.tobytes()
 
         yield (b'--frame\r\n'

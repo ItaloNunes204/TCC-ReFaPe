@@ -1,3 +1,5 @@
+from typing import Union, Any
+
 from numpy import asarray, expand_dims
 from mtcnn import MTCNN
 from keras.models import load_model
@@ -284,15 +286,23 @@ def compara(frame):
     print(frame)
     print("comparando")
     faces = detector.detect_faces(frame)
+    print("loop faces")
     for face in faces:
         print("ola")
-        confidence = face['confidence'] * 100
-        if confidence >= 98:
+        confidence: Union[int, Any] = face['confidence'] * 100
+        print(confidence)
+        print(face['box'])
+        if confidence >= 98.0:
             x1, y1, w, h = face['box']
+            print(face['box'])
             face = extrair_face(frame)
+            print("face"+face)
             face = face.astype("float32") / 255
+            print("face" + face)
             emb = get_embedding(face)
+            print("emb"+emb)
             tensor = np.expand_dims(emb, axis=0)
+            print("tensor"+tensor)
             norm = Normalizer(norm="l2")
             tensor = norm.transform(tensor)
             print(tensor)

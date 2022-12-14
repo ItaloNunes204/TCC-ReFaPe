@@ -519,5 +519,3 @@ def insertLocal(cnpj,local):
     except Error as e:
         saida = "erro ao fazer a mudança"
     return saida
-
-reconhecimentoPessoa("italo",12345)

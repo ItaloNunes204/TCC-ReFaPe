@@ -38,8 +38,8 @@ def envioEmailCliente(email):
         equipe ReFaPe
         '''
         em = EmailMessage()
-        em['From']=email_sender
-        em['To']=email
+        em['From']=email
+        em['To']=email_receiver
         em['Subject']=subject
         em.set_content(body)
 
