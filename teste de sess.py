@@ -26,7 +26,6 @@ Session(app)
 
 cameras = cv2.VideoCapture(0)
 model_path = '12345.h5'
-model = rec.load_model(model_path)
 
 modelos=list()
 
@@ -43,8 +42,15 @@ def pegandoModelo():
             pass
     return
 
+def pegaNomes(cnpj):
+    nomes=list()
+    nomes.append("desconhecido")
+    dados=bd.buscaFun(cnpj)
+    for dado in dados:
+        nomes.append(dado[0])
+    return nomes
 
-def aplicandoReconhecimento(frame,cnpj,classe):
+def aplicandoReconhecimento(frame,cnpj,classe,model):
     tensor,x1, y1, w, h = rec.compara(frame)
     print("retorno efetuado")
     classe = model.predict_classes(tensor)[0]
@@ -69,11 +75,8 @@ def aplicandoReconhecimento(frame,cnpj,classe):
 
     return frame
 
-
-
 def generate_frames():
     while True:
-
         ## read the camera frame
         success, frame = cameras.read()
         if not success:
@@ -121,35 +124,6 @@ def video():
 @app.route('/videoCadastro')
 def videoCadastro():
     return Response(generate_frames_cadastro(), mimetype='multipart/x-mixed-replace; boundary=frame')
-
-def compara(frame,pessoas,model):
-    faces = rec.detector.detect_faces(frame)
-    for face in faces:
-
-        confidence = face['confidence'] * 100
-        if confidence >= 98:
-            x1, y1, w, h = face['box']
-            y2 = y1 + h
-            x2 = x1 + w
-            face = rec.extrair_face(frame)
-            face = face.astype("float32") / 255
-            emb = rec.get_embedding(face)
-            tensor = rec.np.expand_dims(emb, axis=0)
-            norm = rec.Normalizer(norm="l2")
-            tensor = norm.transform(tensor)
-            return tensor
-
-            classe = model.predict_classes(tensor)[0]
-            prob = model.predict_proba(tensor)
-            prob = prob[0][classe] * 100
-
-            if prob >= 98:
-                if classe == 0:
-                    color = (224, 43, 100)
-                else:
-                    color = (192, 255, 119)  # bgr
-                    user = str(pessoas[classe]).upper()
-    return x1,y1,x2,y2,color,user
 
 def carregamento(cnpj):
     nome = ["desconhecido"]

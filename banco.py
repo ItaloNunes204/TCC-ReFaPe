@@ -1,5 +1,6 @@
 import mysql.connector
 from mysql.connector import Error
+from datetime import datetime
 
 try:
     con = mysql.connector.connect(host='localhost', database='refape', user='root', password='italo175933')
@@ -21,11 +22,11 @@ def buscaFun(CNPJ):
         cursor.execute(comando)
         linhas = cursor.fetchall()
         if len(linhas)==0:
-            saida="não existe funcionario"
+            saida = False
         else:
             saida = linhas
     except Error as e:
-        saida = "erro na busca"
+        saida = False
     return saida
 
 def buscaNomeF(CNPJ):
@@ -228,6 +229,7 @@ def login(cnpj,senha):
     except Error as e:
         saida = False
     return saida
+
 def comparacao(cnpj):
     criacao=buscaCriacao(cnpj)
     mudanca=buscaMudanca(cnpj)
@@ -310,41 +312,37 @@ def buscaPontoFuncionarioNome(nome,cnpj):
         saida = "erro"
     return saida
 
-def buscaPontoFuncionarioID(id):
-    comando="SELECT*FROM refape.ponto WHERE id=\'{}\'".format(id)
-    try:
-        cursor.execute(comando)
-        linhas = cursor.fetchall()
-        saida = linhas
-    except Error as e:
-        saida = "erro na busca"
-    return saida
-
 def reconhecimentoPessoa(nome,cnpj):
     pontos=list()
     comando = "SELECT*FROM refape.ponto WHERE nome=\'{}\' and cnpj=\'{}\'".format(nome, cnpj)
     try:
         cursor.execute(comando)
         linhas = cursor.fetchall()
+        if linhas == False:
+            return False
         for linha in linhas:
             pontos.append(linha[2])
         saidas = reconhecimentoPessoaId(max(pontos))
-        for saida in saidas:
-            if saida != False:
-                cpf = saida[3]
-                comparador=saida[6]
-                if comparador == "None":
-                    if updatSaida(max(pontos)) == True:
-                        return True
+        if saidas != False:
+            for saida in saidas:
+                    cpf = saida[1]
+                    comparador = saida[6]
+                    if not comparador:
+                        time_change = datetime.timedelta(minutes=5)
+                        comparador=comparador+time_change
+                        if comparador == datetime.datetime.now():
+                            print("ddddddd")
+                        if updatSaida(max(pontos)) == True:
+                            return True
+                        else:
+                            return False
                     else:
-                        return False
-                else:
-                    if updatEntrada(nome,cpf,cnpj) == True:
-                        return True
-                    else:
-                        return False
-            else:
-                return False
+                        if updatEntrada(nome,cpf,cnpj) == True:
+                            return True
+                        else:
+                            return False
+        else:
+            return False
     except Error as e:
         return False
 
@@ -353,13 +351,14 @@ def updatSaida(id):
     try:
         cursor.execute(comando)
         con.commit()
-        saida = True
+        if calculandoPermanencia(id)==True:
+            saida = True
     except Error as e:
         saida = False
     return saida
 
 def updatEntrada(nome,cpf,cnpj):
-    comando = """ INSERT INTO refape.ponto(nome,cpf,cnpj Entrada)
+    comando = """ INSERT INTO refape.ponto(nome,cpf,cnpj,Entrada)
                VALUE (\'{}\',\'{}\',\'{}\',NOW())""".format(nome, cpf, cnpj)
     try:
         cursor.execute(comando)
@@ -381,7 +380,32 @@ def reconhecimentoPessoaId(id):
     except Error as e:
         return False
 
+def calculandoPermanencia(id):
+    comando = "SELECT*FROM refape.ponto WHERE id=\'{}\'".format(id)
+    try:
+        cursor.execute(comando)
+        linhas = cursor.fetchall()
+        if len(linhas)==0:
+            saida=True
+        else:
+            for linha in linhas:
+                entrada=linha[5]
+                saida=linha[6]
+                tt = saida - entrada
+                return updatPermanencia(id,tt)
+    except Error as e:
+        saida = False
+    return saida
 
+def updatPermanencia(id,tempo):
+    comando = " UPDATE refape.ponto set permanencia = \'{}\' where id=\"{}\" ".format(tempo,id)
+    try:
+        cursor.execute(comando)
+        con.commit()
+        saida = True
+    except Error as e:
+        saida = False
+    return saida
 
 
 def deletarEm(cnpj,confirmacao):
@@ -495,3 +519,5 @@ def insertLocal(cnpj,local):
     except Error as e:
         saida = "erro ao fazer a mudança"
     return saida
+
+reconhecimentoPessoa("italo",12345)
