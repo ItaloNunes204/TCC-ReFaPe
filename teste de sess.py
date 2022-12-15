@@ -11,9 +11,8 @@ import xlwt
 import disparandoEmail as disp
 
 
-global listas,pessoas
+global listas
 listasDeModelos=list()
-listasDePessoas=list()
 
 global switch
 switch = 1
@@ -25,10 +24,7 @@ UPLOAD_FOLDER=os.path.join(os.getcwd(),"fotos")
 Session(app)
 
 cameras = cv2.VideoCapture(0)
-model_path = '12345.h5'
-model=rec.load_model(model_path)
 modelos=list()
-classe=["italo","daniel"]
 
 def pegandoModelo():
     dados=bd.buscaEmpresa()
@@ -50,32 +46,16 @@ def pegaNomes(cnpj):
         nomes.append(dado[0])
     return nomes
 
-def aplicandoReconhecimento(frame,cnpj,classe,model):
-    tensor,x1, y1, w, h = rec.compara(frame)
-    print("retorno efetuado")
-    classe = model.predict_classes(tensor)[0]
-    prob = model.predict_proba(tensor)
-    prob = prob[0][classe] * 100
-    if prob >= 98:
-        y2 = y1 + h
-        x2 = x1 + w
-        if classe == 0:
-            color = (224, 43, 100)
-        else:
-            color = (192, 255, 119)  # bgr
-            user = str(pessoas[classe]).upper()
-        cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
-
-        font = cv2.FONT_HERSHEY_SIMPLEX
-        fonte_scale = 0.5
-
-        if user != "desconhecido":
-            bd.reconhecimentoPessoa(user,cnpj)
-        frame=cv2.putText(frame, user, (x1, y1 - 10), font, fonte_scale, color, thickness=1)
-
+def aplicandoReconhecimento(frame,ModeloTreinado,pessoas):
+    frame = rec.compara(frame,ModeloTreinado,pessoas)
     return frame
 
-def generate_frames():
+def generate_frames(cnpj):
+    pessoas=pegaNomes(cnpj)
+    print(pessoas)
+    model_path = '12345.h5'
+    model = rec.load_model(model_path)
+    print(model)
     while True:
         ## read the camera frame
         success, frame = cameras.read()
@@ -83,9 +63,8 @@ def generate_frames():
             break
         else:
             ret, buffer = cv2.imencode('.jpg', frame)
-            frame=aplicandoReconhecimento(frame,12345,classe,model)
+            frame=aplicandoReconhecimento(frame,model,pessoas)
             frame = buffer.tobytes()
-
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
@@ -119,7 +98,8 @@ def camera():
 
 @app.route('/video')
 def video():
-    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    cnpj = session.get("name")
+    return Response(generate_frames(cnpj), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/videoCadastro')
 def videoCadastro():

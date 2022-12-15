@@ -1,5 +1,3 @@
-from typing import Union, Any
-
 from numpy import asarray, expand_dims
 from mtcnn import MTCNN
 from keras.models import load_model
@@ -14,6 +12,7 @@ import pandas as pd
 import banco as bd
 import os
 from PIL import Image
+import cv2
 
 matrix=list()
 listaFinal,listaL= list(),list()
@@ -282,29 +281,79 @@ def flip_image(image):
         img = image.transpose(Image.FILP_LEFT_RIGHT)
         return img
 
-def compara(frame):
+def compara(frame,ModeloTreinado,pessoas):
     print(frame)
     print("comparando")
     faces = detector.detect_faces(frame)
     print("loop faces")
     for face in faces:
         print("ola")
-        confidence: Union[int, Any] = face['confidence'] * 100
+        confidence = face['confidence'] * 100
         print(confidence)
         print(face['box'])
-        if confidence >= 98.0:
+        if confidence >= 98:
             x1, y1, w, h = face['box']
             print(face['box'])
-            face = extrair_face(frame)
-            print("face"+face)
+            y2 = y1 + h
+            x2 = x1 + w
+            face = extrair_face_reconhecimento(frame,face['box'])
+            print("face:")
+
             face = face.astype("float32") / 255
-            print("face" + face)
-            emb = get_embedding(face)
-            print("emb"+emb)
+            print("face")
+
+            emb = get_embedding_reconhecimento(model,face)
+            print("emb")
             tensor = np.expand_dims(emb, axis=0)
-            print("tensor"+tensor)
+            print("tensor")
             norm = Normalizer(norm="l2")
             tensor = norm.transform(tensor)
             print(tensor)
-            return tensor,x1, y1, w, h
+            classe = ModeloTreinado.predict_classes(tensor)[0]
+            prob = ModeloTreinado.predict_proba(tensor)
+            prob = prob[0][classe] * 100
+            print(classe)
+            print(prob)
+            user = str(pessoas[classe]).upper()
+            print(user)
+            if prob >= 98:
 
+                if classe == 1:
+                    color = (0, 0, 255)
+                else:
+                    color = (192, 0, 0)  # bgr
+
+                cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
+
+                font = cv2.FONT_HERSHEY_SIMPLEX
+                fonte_scale = 0.5
+
+                cv2.putText(frame, user, (x1, y1 - 10), font, fonte_scale, color, thickness=1)
+    return frame
+
+def extrair_face_reconhecimento(image, box, size=(160, 160)):
+
+    pixels = np.asarray(image)
+
+    x1, y1, width, height = box
+
+    x2 = x1 + width
+
+    y2 = y1 + height
+
+    face = pixels[y1:y2, x1:x2]
+
+    image = Image.fromarray(face)
+    image = image.resize(size)
+    return np.asarray(image)
+
+def get_embedding_reconhecimento(facenet, face_pixels):
+
+    face_pixels=face_pixels.astype('float32')
+    std = np.std(face_pixels)
+    mean = np.mean(face_pixels)
+    face_pixels = (face_pixels - mean) / std
+
+    samples = np.expand_dims(face_pixels, axis=0)
+    yhat=facenet.predict(samples)
+    return yhat[0]

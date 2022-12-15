@@ -1,6 +1,6 @@
 import mysql.connector
 from mysql.connector import Error
-from datetime import datetime
+import datetime
 
 try:
     con = mysql.connector.connect(host='localhost', database='refape', user='root', password='italo175933')
@@ -328,12 +328,14 @@ def reconhecimentoPessoa(nome,cnpj):
                     cpf = saida[1]
                     comparador = saida[6]
                     if not comparador:
-                        time_change = datetime.timedelta(minutes=5)
-                        comparador=comparador+time_change
-                        if comparador == datetime.datetime.now():
-                            print("ddddddd")
-                        if updatSaida(max(pontos)) == True:
-                            return True
+                        Entrada=saida[5]
+                        tempoExtra = datetime.timedelta(minutes=5)
+                        Entrada=Entrada+tempoExtra
+                        if Entrada <= datetime.datetime.now():
+                            if updatSaida(max(pontos)) == True:
+                                return True
+                            else:
+                                return False
                         else:
                             return False
                     else:
@@ -353,6 +355,8 @@ def updatSaida(id):
         con.commit()
         if calculandoPermanencia(id)==True:
             saida = True
+        else:
+            saida = False
     except Error as e:
         saida = False
     return saida
