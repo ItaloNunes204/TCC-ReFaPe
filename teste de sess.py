@@ -394,13 +394,23 @@ def treinamento():
     if not session.get("name"):
         return redirect("/login")
     else:
-        cnpj = session.get("name")
-        if request.method == "Post":
-            rec.uniDados(cnpj)
-        if bd.comparacao(cnpj) == True:
-            return render_template("treinamento.html",recente = bd.buscaCriacao(cnpj),pendentes = bd.buscaMudanca(cnpj),mostra = True)
+        if request.method == "POST":
+            cnpj = session.get("name")
+            print("retreinar")
+            if rec.uniDados(cnpj)==False:
+                flash("erro ao fazer o treinamento")
+                return redirect("/Criente")
+            else:
+                flash("treinamento concluido")
+                return redirect("/Criente")
         else:
-            return render_template("treinamento.html",recente = bd.buscaCriacao(cnpj),pendentes = bd.buscaMudanca(cnpj),mostra = False)
+            cnpj = session.get("name")
+            criacao = bd.buscaCriacao(12345)
+            mudanca = bd.buscaMudanca(12345)
+            if bd.comparacao(cnpj) == True:
+                return render_template("treinamento.html",recente = criacao,pendentes = mudanca,mostra = True)
+            else:
+                return render_template("treinamento.html",recente = criacao,pendentes = mudanca,mostra = False)
 
 @app.route("/logout")
 def logout():

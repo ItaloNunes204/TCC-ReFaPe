@@ -45,10 +45,13 @@ def binariza(trainY):
     return Y
 
 def criaRede(trainX, trainY,classes,valX,valY,cnpj):
+    loop=True
     try:
-        deletaInteligen(cnpj)
+        while loop==True :
+            if deletaInteligen(cnpj) == True:
+                loop=False
     except:
-        print("antigo modelo deletado")
+        return False
 
     caminhoFinal = os.path.join(os.getcwd(), "inteligen")
     cnpj=str(cnpj)+".h5"
@@ -64,25 +67,27 @@ def criaRede(trainX, trainY,classes,valX,valY,cnpj):
     modelo.fit(trainX, trainY, epochs=40,validation_data = (valX,valY), batch_size=8)
     modelo.save(cnpj)
     bd.updatCriacao(cnpj)
-    return "inteligenecia criada: pronto para o trabalho"
+    return True
 
 def uniDados(cnpj):
     confirmador=bd.comparacao(cnpj)
     if confirmador == False:
-        dados=bd.buscaInf(cnpj)
-        if dados==None:
-            return "nada"
+        cpfs=bd.buscaInf(cnpj)
+        if cpfs == False:
+            return False
         else:
             caminhoFinal = os.path.join(os.getcwd(), "face")
             df_desconhecidos = pd.read_csv("faces_desconhecidos.csv")
             df_faces = df_desconhecidos
-            cpfs=dados
             for cpf in cpfs:
-                nome=str(cpf)+".csv"
+                nome = str(cpf) + ".csv"
                 for filename in os.listdir(caminhoFinal):
                     if filename == nome:
                         nome = os.path.join(caminhoFinal, nome)
-                        face = pd.read_csv(nome)
+                        try:
+                            face = pd.read_csv(nome)
+                        except:
+                            pass
                         face.drop(columns=['Unnamed: 0'])
                         df_faces = pd.concat(df_faces,face)
             X = np.array(df_faces.drop("target", axis=1))
@@ -274,8 +279,10 @@ def deletaInteligen(cnpj):
             try:
                 os.remove(path)
                 print(filename + " na pasta " + path + " foi deletado ")
+                return True
             except:
                 print("erro na imagem {}".format(nome))
+                return False
 
 def flip_image(image):
         img = image.transpose(Image.FILP_LEFT_RIGHT)
@@ -310,7 +317,9 @@ def compara(frame,ModeloTreinado,pessoas):
             tensor = norm.transform(tensor)
             print(tensor)
             classe = ModeloTreinado.predict_classes(tensor)[0]
+            print(classe)
             prob = ModeloTreinado.predict_proba(tensor)
+            print(prob)
             prob = prob[0][classe] * 100
             print(classe)
             print(prob)

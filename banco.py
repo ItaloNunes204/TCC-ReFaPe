@@ -122,12 +122,12 @@ def buscaMudanca(cnpj):
         cursor.execute(comando)
         linhas = cursor.fetchall()
         if len(linhas) == 0:
-            saida = "erro"
+            saida = False
         else:
             for linha in linhas:
                 saida=linha[0]
     except Error as e:
-        saida = "erro"
+        saida = False
     return saida
 
 def buscaCriacao(cnpj):
@@ -136,12 +136,12 @@ def buscaCriacao(cnpj):
         cursor.execute(comando)
         linhas = cursor.fetchall()
         if len(linhas) == 0:
-            saida = "erro"
+            saida = False
         else:
             for linha in linhas:
-                saida = linha[0]
+                saida=linha[0]
     except Error as e:
-        saida = "erro"
+        saida = False
     return saida
 
 def buscaInf(cnpj):
@@ -151,12 +151,12 @@ def buscaInf(cnpj):
         cursor.execute(comando)
         linhas = cursor.fetchall()
         if len(linhas) == 0:
-            saida = "erro"
+            saida = False
         else:
             for linha in linhas:
                 saida.append(linha[3])
     except Error as e:
-        saida = "erro na busca"
+        saida = False
     return saida
 
 def buscaEmpresa():
@@ -233,7 +233,7 @@ def login(cnpj,senha):
 def comparacao(cnpj):
     criacao=buscaCriacao(cnpj)
     mudanca=buscaMudanca(cnpj)
-    if criacao=="erro" or mudanca=="erro":
+    if criacao==False or mudanca==False:
         return False
     else:
         if criacao == mudanca:
