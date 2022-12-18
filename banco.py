@@ -15,7 +15,24 @@ def fechaConexao():
         cursor.close()
 
 
-#comandos de pesquisa
+#login
+def login(cnpj,senha):
+    comando = "select*from refape.empresa where CNPJ = \'{}\' and senha = \'{}\'".format(cnpj, senha)
+    try:
+        cursor.execute(comando)
+        linhas = cursor.fetchall()
+        if len(linhas) == 0:
+            saida = False
+        else:
+            for linha in linhas:
+                saida = True
+    except Error as e:
+        saida = False
+    return saida
+#-------------------------
+
+
+#listagen funcionarios
 def buscaFun(CNPJ):
     comando = "select*from refape.funcionario where cnpj = \'{}\' ".format(CNPJ)
     try:
@@ -27,32 +44,6 @@ def buscaFun(CNPJ):
             saida = linhas
     except Error as e:
         saida = False
-    return saida
-
-def buscaNomeF(CNPJ):
-    comando = "select nome from refape.funcionario where cnpj = \'{}\' order by nome".format(CNPJ)
-    try:
-        cursor.execute(comando)
-        linhas = cursor.fetchall()
-        if len(linhas)==0:
-            saida="não existe funcionario"
-        else:
-            saida = linhas
-    except Error as e:
-        saida = "erro na busca"
-    return saida
-
-def buscaFunE(CNPJ,CPF):
-    comando = "select*from refape.funcionario where cnpj = \'{}\' and cpf=\'{}\'".format(CNPJ,CPF)
-    try:
-        cursor.execute(comando)
-        linhas = cursor.fetchall()
-        if len(linhas)==0:
-            saida="não existe funcionario"
-        else:
-            saida = linhas
-    except Error as e:
-        saida = "erro na busca"
     return saida
 
 def buscaFunNome(CNPJ,nome):
@@ -67,205 +58,10 @@ def buscaFunNome(CNPJ,nome):
     except Error as e:
         saida = "erro"
     return saida
+#-------------------------
 
 
-
-def cnpjFF():
-    comando = "select * from refape.empresa order by nome"
-    try:
-        cursor.execute(comando)
-        linhas = cursor.fetchall()
-        if len(linhas) == 0:
-            saida = "ERRO"
-        else:
-            saida=list()
-            for linha in linhas:
-                saida.append(linha[4])
-    except Error as e:
-        saida = "ERRO"
-    return saida
-
-def buscaEm(cnpj):
-    comando = "select*from refape.empresa where CNPJ = \'{}\'".format(cnpj)
-    try:
-        cursor.execute(comando)
-        linhas = cursor.fetchall()
-        if len(linhas)==0:
-            saida = "ERRO"
-        else:
-            for linha in linhas:
-                if linha[6] == linha[7]:
-                    saida = True
-                else:
-                    saida = False
-    except Error as e:
-        saida = False
-    return saida
-
-def buscaDdadosEmpresa(cnpj):
-    comando = "select*from refape.empresa where CNPJ = \'{}\'".format(cnpj)
-    try:
-        cursor.execute(comando)
-        linhas = cursor.fetchall()
-        if len(linhas) == 0:
-            saida = "ERRO"
-        else:
-            for linha in linhas:
-                saida=linha
-    except Error as e:
-        saida = False
-    return saida
-
-def buscaMudanca(cnpj):
-    comando = "select mudanca from refape.empresa where cnpj={}".format(cnpj)
-    try:
-        cursor.execute(comando)
-        linhas = cursor.fetchall()
-        if len(linhas) == 0:
-            saida = False
-        else:
-            for linha in linhas:
-                saida=linha[0]
-    except Error as e:
-        saida = False
-    return saida
-
-def buscaCriacao(cnpj):
-    comando = "select criacao from refape.empresa where cnpj={}".format(cnpj)
-    try:
-        cursor.execute(comando)
-        linhas = cursor.fetchall()
-        if len(linhas) == 0:
-            saida = False
-        else:
-            for linha in linhas:
-                saida=linha[0]
-    except Error as e:
-        saida = False
-    return saida
-
-def buscaInf(cnpj):
-    saida=list()
-    comando = "select*from refape.funcionario where cnpj= {} order by nome".format(cnpj)
-    try:
-        cursor.execute(comando)
-        linhas = cursor.fetchall()
-        if len(linhas) == 0:
-            saida = False
-        else:
-            for linha in linhas:
-                saida.append(linha[3])
-    except Error as e:
-        saida = False
-    return saida
-
-def buscaEmpresa():
-    comando = "select*from refape.empresa order by nome"
-    try:
-        cursor.execute(comando)
-        linhas = cursor.fetchall()
-        if len(linhas) == 0:
-            saida = False
-        else:
-            saida=linhas
-    except Error as e:
-        saida = False
-    return saida
-
-
-
-def buscaLocal(cnpj):
-    comando = "select locall from refape.empresa where cnpj= {} order by nome".format(cnpj)
-    try:
-        cursor.execute(comando)
-        linhas = cursor.fetchall()
-        if len(linhas) == 0:
-            saida = "ERRO"
-        else:
-            saida = linhas
-    except Error as e:
-        saida = "ERRO"
-    return saida
-
-def buscaCnpj(cnpj):
-    comando = "select*from refape.empresa where cnpj = {}".format(cnpj)
-    try:
-        cursor.execute(comando)
-        linhas = cursor.fetchall()
-        if len(linhas) == 0:
-            saida = False
-        else:
-            saida = True
-    except Error as e:
-        saida = "ERRO"
-    return saida
-
-def verificador(id):
-    comando="select*from refape.ponto where id = \'{}\'".format(id)
-    try:
-        cursor.execute(comando)
-        linhas = cursor.fetchall()
-        for linha in linhas:
-            if linha[5] == "None":
-                saida=True
-            else:
-                saida=False
-    except Error as e:
-        saida = "erro na busca"
-    return saida
-
-
-
-def login(cnpj,senha):
-    comando = "select*from refape.empresa where CNPJ = \'{}\' and senha = \'{}\'".format(cnpj, senha)
-    try:
-        cursor.execute(comando)
-        linhas = cursor.fetchall()
-        if len(linhas) == 0:
-            saida = False
-        else:
-            for linha in linhas:
-                saida = True
-    except Error as e:
-        saida = False
-    return saida
-
-def comparacao(cnpj):
-    criacao=buscaCriacao(cnpj)
-    mudanca=buscaMudanca(cnpj)
-    if criacao==False or mudanca==False:
-        return False
-    else:
-        if criacao == mudanca:
-            return True
-        else:
-            return False
-
-
-
-def mandaEmpresa(nome,responsavel,e_mail,cnpj,senha):
-    comando = " INSERT INTO refape.empresa(nome,responsavel,e_mail,cnpj,senha) VALUE (\'{}\',\'{}\',\'{}\',\'{}\',\'{}\' )".format(nome,responsavel,e_mail,cnpj,senha)
-    try:
-        cursor.execute(comando)
-        con.commit()
-        saida="deu bom no envio"
-    except Error as e:
-        saida="erro no envio"
-    return saida
-
-def mandaFunci(nome,email,cpf,cnpj):
-    comando=""" INSERT INTO refape.funcionario(nome,email,cpf,cnpj)
-            VALUE (\'{}\',\'{}\',\'{}\',\'{}\')""".format(nome,email,cpf,cnpj)
-    try:
-        cursor.execute(comando)
-        con.commit()
-        saida="deu bom no cadstro de funcionario"
-    except Error as e:
-        saida="erro no cadastro de funcionario"
-    return saida
-
-
-
+#listagen pontos
 def buscaTodosPonto(cnpj):
     comando = "SELECT*FROM refape.ponto WHERE cnpj= \'{}\' ".format(cnpj)
     try:
@@ -273,31 +69,8 @@ def buscaTodosPonto(cnpj):
         linhas = cursor.fetchall()
         saida = linhas
     except Error as e:
-        saida = "erro na busca"
+        saida = False
     return saida
-
-def buscaPontos(cnpj):
-    saida=list()
-    nomes=list()
-    comando = "SELECT*FROM refape.ponto where cnpj={}".format(cnpj)
-    try:
-        cursor.execute(comando)
-        linhas = cursor.fetchall()
-        for linha in linhas:
-            if linha[6]==None:
-                saida.append(linha)
-    except Error as e:
-        saida = "erro na busca"
-    return saida
-
-def buscaPontoFuncionario(cpf,cnpj):
-    comando="SELECT*FROM refape.ponto WHERE cpf=\'{}\' and cnpj=\'{}\'".format(cpf,cnpj)
-    try:
-        cursor.execute(comando)
-        linhas = cursor.fetchall()
-        return linhas
-    except Error as e:
-        return "erro"
 
 def buscaPontoFuncionarioNome(nome,cnpj):
     comando="SELECT*FROM refape.ponto WHERE nome=\'{}\' and cnpj=\'{}\'".format(nome,cnpj)
@@ -305,13 +78,16 @@ def buscaPontoFuncionarioNome(nome,cnpj):
         cursor.execute(comando)
         linhas = cursor.fetchall()
         if len(linhas)==0:
-            saida='erro'
+            saida= False
         else:
             saida = linhas
     except Error as e:
-        saida = "erro"
+        saida = False
     return saida
+#-------------------------
 
+
+#entrada de pontos
 def reconhecimentoPessoa(nome,cnpj):
     pontos=list()
     comando = "SELECT*FROM refape.ponto WHERE nome=\'{}\' and cnpj=\'{}\'".format(nome, cnpj)
@@ -410,27 +186,83 @@ def updatPermanencia(id,tempo):
     except Error as e:
         saida = False
     return saida
+#-------------------------
 
 
-def deletarEm(cnpj,confirmacao):
-    if confirmacao==True:
-        comando="DELETE FROM refape.empresa where cnpj=\'{}\'".format(cnpj)
-        comando2="DELETE FROM refape.funcionario where cnpj=\'{}\'".format(cnpj)
+#envio de empresa
+def mandaEmpresa(nome,responsavel,e_mail,cnpj,senha):
+    comando = " INSERT INTO refape.empresa(nome,responsavel,e_mail,cnpj,senha) VALUE (\'{}\',\'{}\',\'{}\',\'{}\',\'{}\' )".format(nome,responsavel,e_mail,cnpj,senha)
+    try:
+        cursor.execute(comando)
+        con.commit()
+        saida = True
+    except Error as e:
+        saida = False
+    return saida
+
+def buscaCnpj(cnpj):
+    comando = "select*from refape.empresa where cnpj = {}".format(cnpj)
+    try:
+        cursor.execute(comando)
+        linhas = cursor.fetchall()
+        if len(linhas) == 0:
+            saida = False
+        else:
+            saida = True
+    except Error as e:
+        saida = "ERRO"
+    return saida
+#-------------------------
+
+
+#envio de funcionario
+def mandaFunci(nome,email,cpf,cnpj):
+    comando=""" INSERT INTO refape.funcionario(nome,email,cpf,cnpj)
+            VALUE (\'{}\',\'{}\',\'{}\',\'{}\')""".format(nome,email,cpf,cnpj)
+    try:
+        cursor.execute(comando)
+        con.commit()
+        saida=True
+    except Error as e:
+        saida=False
+    return saida
+#-------------------------
+
+
+#modifica Empresa
+    def updatEm(nome, responsavel, email, cnpj, senha):
+        comando = " UPDATE refape.empresa set nome=\"{}\", responsavel=\"{}\" ,e_mail=\"{}\",senha=\"{}\" where cnpj=\"{}\" ".format(
+            nome, responsavel, email, senha, cnpj)
+        try:
+
+            cursor.execute(comando)
+            con.commit()
+            saida = True
+
+        except Error as e:
+            saida = False
+        return saida
+#-------------------------
+
+
+#modifica Funcionario
+    def updatFun(nome, email, cpf, cnpj):
+        comando = " UPDATE refape.funcionario set nome = \"{}\", email = \"{}\"  where cpf = \"{}\" and cnpj=\'{}\'".format(
+            nome, email, cpf, cnpj)
         try:
             cursor.execute(comando)
             con.commit()
-            cursor.execute(comando2)
-            con.commit()
-            saida = "empresa deletada"
+            print(comando)
+            saida = True
         except Error as e:
-            saida = "erro ao deletar a empresa"
+            saida = False
+        return saida
+#-------------------------
 
-    else:
-        saida = "falha ao deletar uma empresa"
-    return saida
 
-def deletarFun(cpf,cnpj):
-        comando = "DELETE FROM refape.funcionario where cpf=\'{}\' and cnpj=\'{}\'".format(cpf,cnpj)
+#deletando Funcionario
+    def deletarFun(cpf, cnpj):
+        comando = "DELETE FROM refape.funcionario where cpf=\'{}\' and cnpj=\'{}\'".format(cpf, cnpj)
         try:
             cursor.execute(comando)
             con.commit()
@@ -439,6 +271,46 @@ def deletarFun(cpf,cnpj):
             saida = False
         return saida
 
+    def buscaFunE(CNPJ, CPF):
+        comando = "select*from refape.funcionario where cnpj = \'{}\' and cpf=\'{}\'".format(CNPJ, CPF)
+        try:
+            cursor.execute(comando)
+            linhas = cursor.fetchall()
+            if len(linhas) == 0:
+                saida = "não existe funcionario"
+            else:
+                saida = linhas
+        except Error as e:
+            saida = "erro na busca"
+        return saida
+
+    def deletandoTodosFuncionarios(cnpj):
+        comando = "DELETE FROM refape.funcionario where cnpj=\'{}\'".format(cnpj)
+        try:
+            cursor.execute(comando)
+            con.commit()
+            saida = True
+        except Error as e:
+            saida = False
+        return saida
+#-------------------------
+
+
+#deletando Empresa
+def deletarEm(cnpj):
+    comando="DELETE FROM refape.empresa where cnpj=\'{}\'".format(cnpj)
+    try:
+        cursor.execute(comando)
+        con.commit()
+        saida = True
+        deletaTodosPontos(cnpj)
+    except Error as e:
+        saida = False
+    return saida
+#-------------------------
+
+
+#deletando ponto
 def deletaPonto(cpf, id):
     comando = "DELETE FROM refape.ponto where cpf= \'{}\' and id = {}".format(cpf, id)
     try:
@@ -458,42 +330,9 @@ def deletaTodosPontos(cnpj):
     except Error as e:
         saida = "erro ao deletar o ponto"
     return saida
+#-------------------------
 
-
-
-def updatEm(nome,responsavel,email,cnpj,senha):
-        comando = " UPDATE refape.empresa set nome=\"{}\", responsavel=\"{}\" ,e_mail=\"{}\",senha=\"{}\" where cnpj=\"{}\" ".format(nome,responsavel,email,senha,cnpj)
-        try:
-
-            cursor.execute(comando)
-            con.commit()
-            saida = True
-
-        except Error as e:
-            saida = False
-        return saida
-
-def updatFaceF(cnpj):
-    comando = " UPDATE refape.empresa set mudanca = CURRENT_TIMESTAMP() where cnpj=\"{}\" ".format(cnpj)
-    try:
-        cursor.execute(comando)
-        con.commit()
-        saida = "mudança feita"
-    except Error as e:
-        saida = "erro ao fazer a mudança"
-    return saida
-
-def updatFun(nome,email,cpf,cnpj):
-        comando = " UPDATE refape.funcionario set nome = \"{}\", email = \"{}\"  where cpf = \"{}\" and cnpj=\'{}\'".format(nome,email,cpf,cnpj)
-        try:
-            cursor.execute(comando)
-            con.commit()
-            print(comando)
-            saida = True
-        except Error as e:
-            saida = False
-        return  saida
-
+#dados de treinamento
 def updatMudanca(cnpj):
     comando = " UPDATE refape.empresa set mudanca = NOW() where cnpj=\"{}\" ".format(cnpj)
     try:
@@ -514,8 +353,115 @@ def updatCriacao(cnpj):
         saida = "erro ao fazer a mudança"
     return saida
 
-def insertLocal(cnpj,local):
-    comando = " UPDATE refape.empresa set locall=\"{}\" where cnpj=\"{}\" ".format(local,cnpj)
+def comparacao(cnpj):
+    criacao=buscaCriacao(cnpj)
+    mudanca=buscaMudanca(cnpj)
+    if criacao==False or mudanca==False:
+        return False
+    else:
+        if criacao == mudanca:
+            return True
+        else:
+            return False
+
+def buscaMudanca(cnpj):
+    comando = "select mudanca from refape.empresa where cnpj={}".format(cnpj)
+    try:
+        cursor.execute(comando)
+        linhas = cursor.fetchall()
+        if len(linhas) == 0:
+            saida = False
+        else:
+            for linha in linhas:
+                saida=linha[0]
+    except Error as e:
+        saida = False
+    return saida
+
+def buscaCriacao(cnpj):
+    comando = "select criacao from refape.empresa where cnpj={}".format(cnpj)
+    try:
+        cursor.execute(comando)
+        linhas = cursor.fetchall()
+        if len(linhas) == 0:
+            saida = False
+        else:
+            for linha in linhas:
+                saida=linha[0]
+    except Error as e:
+        saida = False
+    return saida
+#-------------------------
+
+#busca de modelos
+def buscaEmpresa():
+    comando = "select*from refape.empresa order by nome"
+    try:
+        cursor.execute(comando)
+        linhas = cursor.fetchall()
+        if len(linhas) == 0:
+            saida = False
+        else:
+            saida=linhas
+    except Error as e:
+        saida = False
+    return saida
+#-------------------------
+
+#carregamento
+def buscaNomeF(CNPJ):
+    comando = "select nome from refape.funcionario where cnpj = \'{}\' order by nome".format(CNPJ)
+    try:
+        cursor.execute(comando)
+        linhas = cursor.fetchall()
+        if len(linhas)==0:
+            saida="não existe funcionario"
+        else:
+            saida = linhas
+    except Error as e:
+        saida = "erro na busca"
+    return saida
+#-------------------------
+
+
+#pagina do cliente
+def buscaDdadosEmpresa(cnpj):
+    comando = "select*from refape.empresa where CNPJ = \'{}\'".format(cnpj)
+    try:
+        cursor.execute(comando)
+        linhas = cursor.fetchall()
+        if len(linhas) == 0:
+            saida = "ERRO"
+        else:
+            for linha in linhas:
+                saida=linha
+    except Error as e:
+        saida = False
+    return saida
+#-------------------------
+
+
+#unindo dados
+def buscaInf(cnpj):
+    saida=list()
+    comando = "select*from refape.funcionario where cnpj= {} order by nome".format(cnpj)
+    try:
+        cursor.execute(comando)
+        linhas = cursor.fetchall()
+        if len(linhas) == 0:
+            saida = False
+        else:
+            for linha in linhas:
+                saida.append(linha[3])
+    except Error as e:
+        saida = False
+    return saida
+#-------------------------
+
+
+#modifica registro de face
+def updatFaceF(cnpj):
+    comando = " UPDATE refape.empresa set mudanca = CURRENT_TIMESTAMP() where cnpj=\"{}\" ".format(cnpj)
     try:
         cursor.execute(comando)
         con.commit()
@@ -523,3 +469,4 @@ def insertLocal(cnpj,local):
     except Error as e:
         saida = "erro ao fazer a mudança"
     return saida
+#-------------------------

@@ -236,6 +236,8 @@ def fotos(cpf,numero):
     deletaRosto(cpf,numero)
     return "criado"
 
+
+#deletando
 def deletaFace(cpf,numeros):
     caminhoFinal = os.path.join(os.getcwd(), "face")
     numero = 1
@@ -283,11 +285,16 @@ def deletaInteligen(cnpj):
             except:
                 print("erro na imagem {}".format(nome))
                 return False
+#-------------------------
 
+
+#invertendo Imagem
 def flip_image(image):
         img = image.transpose(Image.FILP_LEFT_RIGHT)
         return img
+#-------------------------
 
+#reconhecimento
 def compara(frame,ModeloTreinado,pessoas):
     print(frame)
     print("comparando")
@@ -366,3 +373,4 @@ def get_embedding_reconhecimento(facenet, face_pixels):
     samples = np.expand_dims(face_pixels, axis=0)
     yhat=facenet.predict(samples)
     return yhat[0]
+#-------------------------

@@ -26,6 +26,7 @@ Session(app)
 cameras = cv2.VideoCapture(0)
 modelos=list()
 
+
 def pegandoModelo():
     dados=bd.buscaEmpresa()
     for dado in dados:
@@ -105,30 +106,6 @@ def video():
 def videoCadastro():
     return Response(generate_frames_cadastro(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-def carregamento(cnpj):
-    nome = ["desconhecido"]
-    pessoas = bd.buscaNomeF(cnpj)
-    nome.extend(pessoas)
-    print(nome)
-    for pessoa in pessoas:
-        print(pessoa)
-    return pessoas
-
-def carrega():
-    lista = bd.cnpjFF()
-    print(lista)
-    for item in lista:
-        cnpj = str(item) + ".h5"
-        caminhoFinal = os.path.join(os.getcwd(), "inteligen")
-        caminhoFinal=caminhoFinal+"\\"+cnpj
-        try:
-            model = rec.load_model(caminhoFinal)
-            listas.append(model)
-            bd.insertLocal(item,len(listas)-1)
-        except:
-            print("modelo não encontrado")
-    return
-
 
 
 
@@ -189,8 +166,12 @@ def Criacao():
             responsavel = request.form.get("responsavel")
             email = request.form.get("email")
             if senha == senhaConfir:
-                bd.mandaEmpresa(nome,responsavel,email,cnpj,senha)
-                return redirect("/login")
+                if bd.mandaEmpresa(nome,responsavel,email,cnpj,senha)==True:
+                    flash("Conta Criada")
+                    return redirect("/login")
+                else:
+                    flash("erro ao criar conta")
+                    return redirect('/criaConta')
             else:
                 flash('confirmação de senha errada')
                 return redirect('/criaConta')
@@ -241,7 +222,8 @@ def funcionario():
             NOME = request.form.get("name")
             EMAIL = request.form.get("email")
             CPF = request.form.get("cpf")
-            bd.mandaFunci(NOME,EMAIL,CPF,cnpj)
+            if bd.mandaFunci(NOME,EMAIL,CPF,cnpj)== False:
+                return redirect("/Criente")
             bd.updatMudanca(cnpj)
             fires = request.files.getlist("fotos")
             if len(fires)>0:
@@ -286,7 +268,11 @@ def listagemF():
         else:
             cnpj=session.get("name")
             funcionarios=bd.buscaFun(cnpj)
-            return render_template("listagemF.html" , funcionarios=funcionarios)
+            if funcionarios !=False:
+                return render_template("listagemF.html" , funcionarios=funcionarios)
+            else:
+                flash("erro ao carregar os funcionarios")
+                return redirect("/Criente")
 
 @app.route("/informaPonto",methods=["POST" , "GET"])
 def informaP():
@@ -300,13 +286,15 @@ def informaP():
                 dados=bd.buscaTodosPonto(cnpj)
             else:
                 dados=bd.buscaPontoFuncionarioNome(busca,cnpj)
-            if dados == 'erro':
-                dados=False
             return render_template("informaP.html", pontos=dados)
         else:
             cnpj=session.get("name")
             pontos=bd.buscaTodosPonto(cnpj)
-            return render_template("informaP.html", pontos=pontos)
+            if pontos != False:
+                return render_template("informaP.html", pontos=pontos)
+            else:
+                flash("erro")
+                return redirect("/Criente")
 
 @app.route("/modificaF/<cpf>",methods=["POST" , "GET"])
 def modificaF(cpf):
