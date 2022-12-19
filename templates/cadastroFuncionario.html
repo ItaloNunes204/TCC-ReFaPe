@@ -25,7 +25,7 @@
       <div class='card'>
         <h1> Cadastrar Funcionario</h1>
 
-          <form action="/funci" method="POST">
+          <form action="/funci" enctype="multipart/form-data" method="POST">
                 <div class="label-float">
                    <input type="text" id="nome" name="name" placeholder=" " required>
                    <label id="labelNome" for="nome">Nome do Funcionario</label>
@@ -41,9 +41,7 @@
                    <label id="labelCpf" for="cpf">cpf</label>
                 </div>
 
-                    <label id="labelImagem" for="labelImagem">fotos</label>
-                   <input type="file" name="fotos" multiple="true" id="imagem" autocomplete="off">
-
+                   <input type="file" name="imagem[]" multiple="true" id="imagem" autocomplete="off">
 
                 <div class='justify-center'>
                    <button type="submit" name="Register"> Cadastrar </button>

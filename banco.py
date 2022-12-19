@@ -462,13 +462,13 @@ def buscaInf(cnpj):
 
 
 #modifica registro de face
-def updatFaceF(cnpj):
-    comando = " UPDATE refape.empresa set mudanca = CURRENT_TIMESTAMP() where cnpj=\"{}\" ".format(cnpj)
+def updatFaceF(cnpj,saida):
+    comando = " UPDATE refape.funcionario set face = {} where cnpj=\"{}\" ".format(saida,cnpj)
     try:
         cursor.execute(comando)
         con.commit()
-        saida = "mudança feita"
+        saida = True
     except Error as e:
-        saida = "erro ao fazer a mudança"
+        saida = False
     return saida
 #-------------------------

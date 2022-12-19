@@ -214,25 +214,28 @@ def trataFotos(cpf,numeros):
     return
 
 def fotos(cpf,numero):
-    trataFotos(cpf,numero)
-    nome=str(cpf)+".csv"
-    caminho=os.path.join(os.getcwd(),"rostos")
-    caminhoFace = os.path.join(os.getcwd(), "face")
-    trainx, trainy = load_fotos(caminho,cpf,numero)
-    newTrainX = list()
-    for face in trainx:
-        embedding = paroniza(face)
-        newTrainX.append(embedding)
-    newTrainX = asarray(newTrainX)
-    newTrainX.shape
-    print(newTrainX)
-    df = pd.DataFrame(data=newTrainX)
-    df['target'] = trainy
-    nome= os.path.join(caminhoFace,nome)
-    df.to_csv(nome)
-    deletaFace(cpf,numero)
-    deletaRosto(cpf,numero)
-    return "criado"
+    try:
+        trataFotos(cpf,numero)
+        nome=str(cpf)+".csv"
+        caminho=os.path.join(os.getcwd(),"rostos")
+        caminhoFace = os.path.join(os.getcwd(), "face")
+        trainx, trainy = load_fotos(caminho,cpf,numero)
+        newTrainX = list()
+        for face in trainx:
+            embedding = paroniza(face)
+            newTrainX.append(embedding)
+        newTrainX = asarray(newTrainX)
+        newTrainX.shape
+        print(newTrainX)
+        df = pd.DataFrame(data=newTrainX)
+        df['target'] = trainy
+        nome= os.path.join(caminhoFace,nome)
+        df.to_csv(nome)
+        deletaFace(cpf,numero)
+        deletaRosto(cpf,numero)
+        return True
+    except:
+        return False
 
 
 #deletando

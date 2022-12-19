@@ -226,15 +226,15 @@ def funcionario():
         return redirect("/login")
     else:
         if request.method=="POST":
-            cnpj = session.get("name")
-            NOME = request.form.get("name")
-            EMAIL = request.form.get("email")
-            CPF = request.form.get("cpf")
-            if bd.mandaFunci(NOME,EMAIL,CPF,cnpj)== False:
-                return redirect("/Criente")
-            bd.updatMudanca(cnpj)
-            fires = request.files.getlist("fotos")
-            if len(fires)>0:
+            fires = request.files.getlist("imagem[]")
+            if len(fires)!=0:
+                cnpj = session.get("name")
+                NOME = request.form.get("name")
+                EMAIL = request.form.get("email")
+                CPF = request.form.get("cpf")
+                if bd.mandaFunci(NOME,EMAIL,CPF,cnpj)== False:
+                    return redirect("/Criente")
+                bd.updatMudanca(cnpj)
                 contadorr=len(fires)
                 for fire in fires:
                     contador=contadorr
@@ -243,10 +243,16 @@ def funcionario():
                     fire.save(savePath)
                     print("envio feito")
                     contadorr=contadorr-1
-                rec.fotos(request.form.get("cpf"),len(fires))
+                saida = rec.fotos(request.form.get("cpf"),len(fires))
+                if saida==True:
+                    bd.updatFaceF(cnpj,True)
+                    flash("cadastrado")
+                else:
+                    flash("erro no cadastro")
+                    bd.updatFaceF(cnpj, False)
                 return redirect("/Criente")
             else:
-                return fotosCadastroFuncionario(CPF)
+                return redirect("/Criente")
         else:
             return render_template("cadastroFuncionario.html")
 
