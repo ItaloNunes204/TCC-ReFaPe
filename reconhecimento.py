@@ -70,8 +70,6 @@ def criaRede(trainX, trainY,classes,valX,valY,cnpj):
     return True
 
 def uniDados(cnpj):
-    confirmador=bd.comparacao(cnpj)
-    if confirmador == False:
         cpfs=bd.buscaInf(cnpj)
         if cpfs == False:
             return False

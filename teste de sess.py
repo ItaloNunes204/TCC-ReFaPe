@@ -137,15 +137,18 @@ def Criente():
     else:
         cnpj=session.get("name")
         saida = bd.buscaDdadosEmpresa(cnpj)
-        nome=saida[0]
-        responsavel=saida[1]
-        return render_template('tela_inicial.html',nome=nome,responsavel=responsavel)
+        if saida!=False:
+            nome=saida[0]
+            responsavel=saida[1]
+            return render_template('tela_inicial.html',nome=nome,responsavel=responsavel)
+        else:
+            return redirect("/logout")
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
         if request.method == "POST":
             verificador = bd.login(request.form.get("name"),request.form.get("senha"))
-            if(verificador==True):
+            if verificador==True:
                 session["name"] = request.form.get("name")
                 return redirect("/Criente")
             else:
@@ -158,7 +161,7 @@ def login():
 def Criacao():
     if request.method == "POST":
         cnpj = request.form.get("cnpj")
-        verificador = bd.buscaCnpj(cnpj)
+        verificador = bd.buscaDdadosEmpresa(cnpj)
         if verificador == False:
             senha = request.form.get("senha")
             senhaConfir=request.form.get("senhaConfir")
@@ -262,8 +265,6 @@ def listagemF():
                 dados=bd.buscaFun(cnpj)
             else:
                 dados=bd.buscaFunNome(cnpj,busca)
-            if dados == 'erro':
-                dados=False
             return render_template("listagemF.html", funcionarios=dados)
         else:
             cnpj=session.get("name")
@@ -304,14 +305,16 @@ def modificaF(cpf):
         if request.method == "GET":
             cnpj = session.get("name")
             dados=bd.buscaFunE(cnpj,cpf)
-            return render_template("modificaFuncionario.html", dados=dados)
+            if dados!=False:
+                return render_template("modificaFuncionario.html", dados=dados)
+            else:
+                return redirect("/listagemF")
         else:
             cnpj = session.get("name")
             nome=request.form.get("nome")
             email=request.form.get("email")
             cpf=request.form.get("cpf")
             conf=request.form.get("confirmacao")
-            print(conf)
             if conf=='on':
                 if bd.updatFun(nome,email,cpf,cnpj)==True:
                     flash("mudança efetuada")
@@ -328,7 +331,6 @@ def deletaP(id):
     else:
         if request.method=="GET":
             dados=bd.buscaPontoFuncionarioID(id)
-            print(dados)
             return render_template("ApagaPonto.html",dados=dados)
         else:
             id=request.form.get("id")

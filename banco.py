@@ -24,8 +24,7 @@ def login(cnpj,senha):
         if len(linhas) == 0:
             saida = False
         else:
-            for linha in linhas:
-                saida = True
+            saida = True
     except Error as e:
         saida = False
     return saida
@@ -52,11 +51,11 @@ def buscaFunNome(CNPJ,nome):
         cursor.execute(comando)
         linhas = cursor.fetchall()
         if len(linhas)==0:
-            saida="erro"
+            saida=False
         else:
             saida = linhas
     except Error as e:
-        saida = "erro"
+        saida = False
     return saida
 #-------------------------
 
@@ -67,7 +66,10 @@ def buscaTodosPonto(cnpj):
     try:
         cursor.execute(comando)
         linhas = cursor.fetchall()
-        saida = linhas
+        if len(linhas)==0:
+            saida=False
+        else:
+            saida = linhas
     except Error as e:
         saida = False
     return saida
@@ -199,19 +201,6 @@ def mandaEmpresa(nome,responsavel,e_mail,cnpj,senha):
     except Error as e:
         saida = False
     return saida
-
-def buscaCnpj(cnpj):
-    comando = "select*from refape.empresa where cnpj = {}".format(cnpj)
-    try:
-        cursor.execute(comando)
-        linhas = cursor.fetchall()
-        if len(linhas) == 0:
-            saida = False
-        else:
-            saida = True
-    except Error as e:
-        saida = "ERRO"
-    return saida
 #-------------------------
 
 
@@ -277,11 +266,11 @@ def mandaFunci(nome,email,cpf,cnpj):
             cursor.execute(comando)
             linhas = cursor.fetchall()
             if len(linhas) == 0:
-                saida = "não existe funcionario"
+                saida = False
             else:
                 saida = linhas
         except Error as e:
-            saida = "erro na busca"
+            saida = False
         return saida
 
     def deletandoTodosFuncionarios(cnpj):
@@ -304,6 +293,19 @@ def deletarEm(cnpj):
         con.commit()
         saida = True
         deletaTodosPontos(cnpj)
+    except Error as e:
+        saida = False
+    return saida
+
+def buscaPontoFuncionarioID(id):
+    comando = "SELECT*FROM refape.ponto WHERE id=\'{}\'".format(id)
+    try:
+        cursor.execute(comando)
+        linhas = cursor.fetchall()
+        if len(linhas) == 0:
+            saida = False
+        else:
+            saida = linhas
     except Error as e:
         saida = False
     return saida
@@ -338,9 +340,9 @@ def updatMudanca(cnpj):
     try:
         cursor.execute(comando)
         con.commit()
-        saida = "mudança feita"
+        saida = True
     except Error as e:
-        saida = "erro ao fazer a mudança"
+        saida = False
     return saida
 
 def updatCriacao(cnpj):
@@ -348,15 +350,15 @@ def updatCriacao(cnpj):
     try:
         cursor.execute(comando)
         con.commit()
-        saida = "mudança feita"
+        saida = True
     except Error as e:
-        saida = "erro ao fazer a mudança"
+        saida = False
     return saida
 
 def comparacao(cnpj):
     criacao=buscaCriacao(cnpj)
     mudanca=buscaMudanca(cnpj)
-    if criacao==False or mudanca==False:
+    if criacao == False or mudanca == False:
         return False
     else:
         if criacao == mudanca:
@@ -431,7 +433,7 @@ def buscaDdadosEmpresa(cnpj):
         cursor.execute(comando)
         linhas = cursor.fetchall()
         if len(linhas) == 0:
-            saida = "ERRO"
+            saida = False
         else:
             for linha in linhas:
                 saida=linha
