@@ -9,6 +9,7 @@ import csv
 import io
 import xlwt
 import disparandoEmail as disp
+import tratamentoSenha as TS
 
 
 global listas
@@ -147,7 +148,10 @@ def Criente():
 @app.route("/login", methods=["POST", "GET"])
 def login():
         if request.method == "POST":
-            verificador = bd.login(request.form.get("name"),request.form.get("senha"))
+            cnpj=request.form.get("name")
+            senha=request.form.get("senha")
+            senha = TS.codificando(senha)
+            verificador = bd.login(cnpj,senha)
             if verificador==True:
                 session["name"] = request.form.get("name")
                 return redirect("/Criente")
@@ -169,6 +173,7 @@ def Criacao():
             responsavel = request.form.get("responsavel")
             email = request.form.get("email")
             if senha == senhaConfir:
+                senha = TS.codificando(senha)
                 if bd.mandaEmpresa(nome,responsavel,email,cnpj,senha)==True:
                     flash("Conta Criada")
                     return redirect("/login")
