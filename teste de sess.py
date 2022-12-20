@@ -203,6 +203,7 @@ def EditaEmpresa():
                     nome = request.form.get("nome")
                     email = request.form.get("email")
                     responsavel = request.form.get("responsavel")
+                    senha=TS.codificando(senha)
                     if bd.updatEm(nome, responsavel, email, cnpj, senha)==True:
                         flash("mudança realizada ")
                         return redirect("/Criente")

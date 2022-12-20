@@ -219,7 +219,7 @@ def mandaFunci(nome,email,cpf,cnpj):
 
 
 #modifica Empresa
-    def updatEm(nome, responsavel, email, cnpj, senha):
+def updatEm(nome, responsavel, email, cnpj, senha):
         comando = " UPDATE refape.empresa set nome=\"{}\", responsavel=\"{}\" ,e_mail=\"{}\",senha=\"{}\" where cnpj=\"{}\" ".format(
             nome, responsavel, email, senha, cnpj)
         try:
@@ -235,7 +235,7 @@ def mandaFunci(nome,email,cpf,cnpj):
 
 
 #modifica Funcionario
-    def updatFun(nome, email, cpf, cnpj):
+def updatFun(nome, email, cpf, cnpj):
         comando = " UPDATE refape.funcionario set nome = \"{}\", email = \"{}\"  where cpf = \"{}\" and cnpj=\'{}\'".format(
             nome, email, cpf, cnpj)
         try:
@@ -250,7 +250,7 @@ def mandaFunci(nome,email,cpf,cnpj):
 
 
 #deletando Funcionario
-    def deletarFun(cpf, cnpj):
+def deletarFun(cpf, cnpj):
         comando = "DELETE FROM refape.funcionario where cpf=\'{}\' and cnpj=\'{}\'".format(cpf, cnpj)
         try:
             cursor.execute(comando)
@@ -260,7 +260,7 @@ def mandaFunci(nome,email,cpf,cnpj):
             saida = False
         return saida
 
-    def buscaFunE(CNPJ, CPF):
+def buscaFunE(CNPJ, CPF):
         comando = "select*from refape.funcionario where cnpj = \'{}\' and cpf=\'{}\'".format(CNPJ, CPF)
         try:
             cursor.execute(comando)
@@ -273,7 +273,7 @@ def mandaFunci(nome,email,cpf,cnpj):
             saida = False
         return saida
 
-    def deletandoTodosFuncionarios(cnpj):
+def deletandoTodosFuncionarios(cnpj):
         comando = "DELETE FROM refape.funcionario where cnpj=\'{}\'".format(cnpj)
         try:
             cursor.execute(comando)
