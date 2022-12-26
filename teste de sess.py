@@ -50,6 +50,7 @@ def pegaNomes(cnpj):
 
 def aplicandoReconhecimento(frame,ModeloTreinado,pessoas):
     frame = rec.compara(frame,ModeloTreinado,pessoas)
+    print("frame")
     return frame
 
 def generate_frames(cnpj):

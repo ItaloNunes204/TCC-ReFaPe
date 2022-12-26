@@ -346,6 +346,7 @@ def compara(frame,ModeloTreinado,pessoas):
                 fonte_scale = 0.5
 
                 cv2.putText(frame, user, (x1, y1 - 10), font, fonte_scale, color, thickness=1)
+                print("retornando Frame")
     return frame
 
 def extrair_face_reconhecimento(image, box, size=(160, 160)):
