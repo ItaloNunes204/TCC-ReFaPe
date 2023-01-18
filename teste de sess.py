@@ -125,14 +125,14 @@ def envioEmail():
         if nome != "None" and email != "None" and mensagem != 'None':
             saida = disp.envioEmail(nome, email, assunto, mensagem)
             if saida == True:
-                flash("mensagem enviada")
+                flash("Mensagem enviada")
             else:
-                flash("erro ao enviar a mensagem ")
+                flash("Erro ao enviar a mensagem ")
         else:
-            flash("erro ao enviar a mensagem ")
+            flash("Erro ao enviar a mensagem ")
         return redirect('/')
 
-@app.route("/Criente", methods=["POST", "GET"])
+@app.route("/Cliente", methods=["POST", "GET"])
 def Criente():
     if not session.get("name"):
         return redirect("/login")
@@ -155,9 +155,9 @@ def login():
             verificador = bd.login(cnpj,senha)
             if verificador==True:
                 session["name"] = request.form.get("name")
-                return redirect("/Criente")
+                return redirect("/Cliente")
             else:
-                flash("o cnpj ou a senha esta errada ")
+                flash("Verifique a senha ou o CNPJ")
                 return redirect('/login')
                 
         return render_template("loginEmpresa.html")
@@ -179,13 +179,13 @@ def Criacao():
                     flash("Conta Criada")
                     return redirect("/login")
                 else:
-                    flash("erro ao criar conta")
+                    flash("Erro ao criar conta")
                     return redirect('/criaConta')
             else:
-                flash('confirmação de senha errada')
+                flash('Confirmação de senha errada')
                 return redirect('/criaConta')
         else:
-            flash('empresa ja cadastrada')
+            flash('Empresa ja cadastrada')
             return redirect('/criaConta')
     return render_template("cadastroEmpresa.html")
 
@@ -206,17 +206,17 @@ def EditaEmpresa():
                     responsavel = request.form.get("responsavel")
                     senha=TS.codificando(senha)
                     if bd.updatEm(nome, responsavel, email, cnpj, senha)==True:
-                        flash("mudança realizada ")
-                        return redirect("/Criente")
+                        flash("Mudança realizada ")
+                        return redirect("/Cliente")
                     else:
-                        flash("erro na mudança")
-                        return redirect("/Criente")
+                        flash("Erro na mudança")
+                        return redirect("/Cliente")
                 else:
-                    flash("senhas diferentes")
-                    return redirect("/Criente")
+                    flash("Senhas diferentes")
+                    return redirect("/Cliente")
             else:
-                flash("confirmação não marcada")
-                return redirect("/Criente")
+                flash("Confirmação não marcada")
+                return redirect("/Cliente")
         else:
             cnpj=session.get("name")
             dados=bd.buscaDdadosEmpresa(cnpj)
@@ -235,7 +235,7 @@ def funcionario():
                 EMAIL = request.form.get("email")
                 CPF = request.form.get("cpf")
                 if bd.mandaFunci(NOME,EMAIL,CPF,cnpj)== False:
-                    return redirect("/Criente")
+                    return redirect("/Cliente")
                 bd.updatMudanca(cnpj)
                 contadorr=len(fires)
                 for fire in fires:
@@ -248,13 +248,13 @@ def funcionario():
                 saida = rec.fotos(request.form.get("cpf"),len(fires))
                 if saida==True:
                     bd.updatFaceF(cnpj,True)
-                    flash("cadastrado")
+                    flash("Cadastrado")
                 else:
-                    flash("erro no cadastro")
+                    flash("Erro no cadastro")
                     bd.updatFaceF(cnpj, False)
-                return redirect("/Criente")
+                return redirect("/Cliente")
             else:
-                return redirect("/Criente")
+                return redirect("/Cliente")
         else:
             return render_template("cadastroFuncionario.html")
 
@@ -285,8 +285,8 @@ def listagemF():
             if funcionarios !=False:
                 return render_template("listagemF.html" , funcionarios=funcionarios)
             else:
-                flash("erro ao carregar os funcionarios")
-                return redirect("/Criente")
+                flash("Erro ao carregar os funcionários")
+                return redirect("/Cliente")
 
 @app.route("/informaPonto",methods=["POST" , "GET"])
 def informaP():
@@ -307,8 +307,8 @@ def informaP():
             if pontos != False:
                 return render_template("informaP.html", pontos=pontos)
             else:
-                flash("erro")
-                return redirect("/Criente")
+                flash("Erro")
+                return redirect("/Cliente")
 
 @app.route("/modificaF/<cpf>",methods=["POST" , "GET"])
 def modificaF(cpf):
@@ -330,11 +330,11 @@ def modificaF(cpf):
             conf=request.form.get("confirmacao")
             if conf=='on':
                 if bd.updatFun(nome,email,cpf,cnpj)==True:
-                    flash("mudança efetuada")
+                    flash("Mudança efetuada")
                 else:
-                    flash("erro na mudança")
+                    flash("Erro na mudança")
             else:
-                flash("confirmação não marcada")
+                flash("Confirmação não marcada")
         return redirect('/listagemF')
 
 @app.route("/deletaP/<id>", methods=["POST","GET"])
@@ -351,13 +351,13 @@ def deletaP(id):
             conf = request.form.get("confirmacao")
             if conf == 'on':
                 if bd.deletaPonto(cpf,id)==True:
-                    flash("ponto deletado ")
+                    flash("Ponto deletado")
                     return redirect('/informaPonto')
                 else:
-                    flash(" erro ao deletar o ponto ")
+                    flash("Erro ao deletar o ponto ")
                     return redirect('/informaPonto')
             else:
-                flash(" confirmação não marcado")
+                flash("Confirmação não marcado")
                 return redirect('/informaPonto')
 
 @app.route("/apagarFunc/<cpf>",methods=["POST" , "GET"])
@@ -379,13 +379,13 @@ def apagaF(cpf):
                 print(cnpj)
                 print(cpf)
                 if bd.deletarFun(cpf, cnpj)==True:
-                    flash('funcionario deletado')
+                    flash('Funcionário deletado')
                     return redirect('/listagemF')
                 else:
-                    flash('erro ao deletar funcionario')
+                    flash('Erro ao deletar funcionário')
                     return redirect('/listagemF')
             else:
-                flash('erro ao deletar funcionario')
+                flash('Erro ao deletar funcionário')
                 return redirect('/listagemF')
 
 @app.route("/caregamento")
@@ -401,11 +401,11 @@ def treinamento():
             cnpj = session.get("name")
             print("retreinar")
             if rec.uniDados(cnpj)==False:
-                flash("erro ao fazer o treinamento")
-                return redirect("/Criente")
+                flash("Erro ao fazer o treinamento")
+                return redirect("/Cliente")
             else:
-                flash("treinamento concluido")
-                return redirect("/Criente")
+                flash("Treinamento concluido")
+                return redirect("/Cliente")
         else:
             cnpj = session.get("name")
             criacao = bd.buscaCriacao(12345)

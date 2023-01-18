@@ -11,44 +11,44 @@
 
 <div class='container'>
   <div class='card'>
-    <h1> apagando ponto </h1>
+    <h1> Apagando Ponto </h1>
       <form action="deletaP" method="POST">
           {%for dado in dados%}
             <div class="saida">
-               <input type="text" id="nome" name="nome" placeholder=" "  value = {{dado[0]}} required>
-               <label id="labelNome" for="nome">Nome</label>
+                <p>{{dado[0]}}</p>
+               <label id="labelNome">Nome</label>
             </div>
 
             <div class="saida">
-               <input type="text" id="email" name="cpf" placeholder=" "  value = {{dado[1]}} required>
-               <label id="labelEmail" for="nome">cpf</label>
+                <input type="text" id="email" name="cpf" placeholder=" "  value = {{dado[1]}} readonly>
+               <label id="labelEmail">CPF</label>
             </div>
 
             <div class="saida">
-               <input type="text" id="id" name="id" placeholder=" "  value={{dado[2]}} required>
-               <label id="labelresponsavel" for="nome">id</label>
+                <input type="text" id="id" name="id" placeholder=" "  value={{dado[2]}} readonly>
+               <label id="labelresponsavel">ID</label>
             </div>
 
             <div class="saida">
-               <input type="text" id="entrada"  name="entrada" placeholder=" "  value={{dado[5]}} required>
-               <label id="labelEntrada" for="nome">entrada</label>
+                <p>{{dado[5]}}</p>
+               <label id="labelEntrada">Entrada</label>
             </div>
             <div class="saida">
-               <input type="text" id="saida" name="saida" placeholder=" "  value={{dado[6]}} required>
-               <label id="labelSaida" for="nome">saida</label>
+                <p>{{dado[6]}}</p>
+               <label id="labelSaida">Saída</label>
             </div>
             <div class="saida">
-               <input type="text" id="permanencia" name="permanencia" placeholder=" "  value={{dado[3]}} required>
-               <label id="labelPermanencia" for="nome">permanencia</label>
+                <p>{{dado[3]}}</p>
+               <label id="labelPermanencia">Permanéncia</label>
             </div>
             <div class="saida">
-               <input type="text" id="cnpj" name="cnpj" placeholder=" "  value={{dado[4]}} required>
-               <label id="labelcnpj" for="nome">cnpj</label>
+                <p>{{dado[4]}}</p>
+               <label id="labelcnpj">CNPJ</label>
             </div>
 
             <div class="justify-center">
                <input type="checkbox" id="confirmacao" name="confirmacao">
-               <label id="labelConfirmacao" for="confirmacao">confirmação</label>
+               <label id="labelConfirmacao" for="confirmacao">Confirmação</label>
             </div>
 
             <div class='justify-center'>
